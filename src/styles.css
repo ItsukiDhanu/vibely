@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Grand+Hotel&family=Manrope:wght@400;500;600;700;800&display=swap');
 
 :root {
   --bg: #0b0f14;
@@ -76,10 +76,27 @@ button {
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  font-family: "Playfair Display", "Manrope", serif;
-  font-weight: 700;
-  letter-spacing: 0.4px;
+  font-family: "Grand Hotel", "Manrope", cursive;
+  font-weight: 400;
+  letter-spacing: 0.2px;
   line-height: 1;
+}
+
+.brand span,
+.mobile-brand span,
+.auth-brand span {
+  color: var(--text);
+}
+
+@supports (-webkit-background-clip: text) or (background-clip: text) {
+  .brand span,
+  .mobile-brand span,
+  .auth-brand span {
+    background: linear-gradient(135deg, #f9ce34, #ee2a7b 45%, #6228d7);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
 }
 
 .brand-logo {
@@ -524,9 +541,9 @@ button {
   align-items: center;
   justify-content: center;
   gap: 10px;
-  font-family: "Playfair Display", "Manrope", serif;
-  font-weight: 700;
-  letter-spacing: 0.4px;
+  font-family: "Grand Hotel", "Manrope", cursive;
+  font-weight: 400;
+  letter-spacing: 0.2px;
   font-size: 32px;
 }
 

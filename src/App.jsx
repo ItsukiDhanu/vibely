@@ -110,6 +110,7 @@ function getDefaultRedirectUri() {
 function App() {
   const [viewer, setViewer] = useState(null);
   const [isAuthLoading, setIsAuthLoading] = useState(true);
+  const [authMode, setAuthMode] = useState('login');
 
   useEffect(() => {
     let isMounted = true;
@@ -146,25 +147,10 @@ function App() {
   }, []);
 
   const isConnected = Boolean(viewer);
-  const showLoginGate = !isAuthLoading && !isConnected;
 
-  useEffect(() => {
-    if (typeof document === 'undefined') {
-      return undefined;
-    }
-
-    if (!showLoginGate) {
-      document.body.style.overflow = '';
-      return undefined;
-    }
-
-    const previousOverflow = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
-
-    return () => {
-      document.body.style.overflow = previousOverflow;
-    };
-  }, [showLoginGate]);
+  if (!isConnected) {
+    return <AuthPage mode={authMode} onModeChange={setAuthMode} isAuthLoading={isAuthLoading} />;
+  }
 
   return (
     <div className="app-shell">
@@ -180,7 +166,87 @@ function App() {
         </aside>
       </main>
       <MobileBar />
-      {showLoginGate && <LoginGate />}
+    </div>
+  );
+}
+
+function AuthPage({ mode, onModeChange, isAuthLoading }) {
+  const isRegistering = mode === 'register';
+  const title = isRegistering ? 'Create your account' : 'Log in to Vibely';
+  const subtitle = isRegistering
+    ? 'Join the community and start sharing your moments.'
+    : 'Welcome back. Sign in to continue.';
+  const submitLabel = isRegistering ? 'Create account' : 'Log in';
+
+  return (
+    <div className="auth-page">
+      <div className="auth-panel">
+        <div className="auth-brand">
+          <img className="brand-logo" src={brandLogo} alt="" />
+          <span>Vibely</span>
+        </div>
+        <div className="auth-heading">
+          <h1>{title}</h1>
+          <p>{subtitle}</p>
+        </div>
+
+        <form
+          className="auth-form"
+          onSubmit={(event) => {
+            event.preventDefault();
+          }}
+        >
+          <label className="auth-field">
+            <span>Username</span>
+            <input
+              type="text"
+              name="username"
+              placeholder="yourname"
+              autoComplete="username"
+              required
+            />
+          </label>
+          <label className="auth-field">
+            <span>Password</span>
+            <input
+              type="password"
+              name="password"
+              placeholder="••••••••"
+              autoComplete={isRegistering ? 'new-password' : 'current-password'}
+              required
+            />
+          </label>
+          {isRegistering && (
+            <label className="auth-field">
+              <span>Confirm password</span>
+              <input
+                type="password"
+                name="confirmPassword"
+                placeholder="••••••••"
+                autoComplete="new-password"
+                required
+              />
+            </label>
+          )}
+          <button className="primary-action auth-submit" type="submit" disabled={isAuthLoading}>
+            {isAuthLoading ? 'Checking session...' : submitLabel}
+          </button>
+        </form>
+
+        <div className="auth-divider">
+          <span>or</span>
+        </div>
+        <GithubAuthButton className="secondary-action github-action auth-action" label="Continue with GitHub" />
+
+        <button
+          className="auth-toggle"
+          type="button"
+          onClick={() => onModeChange(isRegistering ? 'login' : 'register')}
+        >
+          <span>{isRegistering ? 'Already have an account?' : 'New here?'}</span>
+          <span className="auth-toggle-action">{isRegistering ? 'Log in' : 'Register now'}</span>
+        </button>
+      </div>
     </div>
   );
 }
@@ -355,23 +421,6 @@ function AccountPanel({ viewer, isAuthLoading }) {
           <p>No activity yet.</p>
         </div>
       </section>
-    </div>
-  );
-}
-
-function LoginGate() {
-  return (
-    <div className="auth-gate" role="dialog" aria-modal="true" aria-label="Login required">
-      <div className="auth-dialog">
-        <div className="auth-brand">
-            <img className="brand-logo" src={brandLogo} alt="" />
-          <span>Vibely</span>
-        </div>
-        <h2>Log in to continue</h2>
-        <p>Connect with GitHub to unlock your personalized feed.</p>
-        <GithubAuthButton className="primary-action github-action auth-action" label="Continue with GitHub" />
-        <p className="auth-footnote">By continuing, you agree to connect your GitHub profile.</p>
-      </div>
     </div>
   );
 }

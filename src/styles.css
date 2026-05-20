@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap');
 
 :root {
   --bg: #0b0f14;
@@ -76,7 +76,9 @@ button {
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  font-family: "Brush Script MT", "Segoe Script", cursive;
+  font-family: "Playfair Display", "Manrope", serif;
+  font-weight: 700;
+  letter-spacing: 0.4px;
   line-height: 1;
 }
 
@@ -522,7 +524,9 @@ button {
   align-items: center;
   justify-content: center;
   gap: 10px;
-  font-family: "Brush Script MT", "Segoe Script", cursive;
+  font-family: "Playfair Display", "Manrope", serif;
+  font-weight: 700;
+  letter-spacing: 0.4px;
   font-size: 32px;
 }
 

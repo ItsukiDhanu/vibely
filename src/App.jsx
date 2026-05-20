@@ -19,7 +19,8 @@ import {
   UserCircle,
   Users,
 } from 'lucide-react';
-import vibelyLogo from '../Vibely_logo.png';
+
+const brandLogo = '/Vibely_logo.png';
 
 const navItems = [
   { label: 'Home', icon: Home, active: true },
@@ -188,7 +189,7 @@ function MobileHeader() {
   return (
     <header className="mobile-header">
       <a className="mobile-brand" href="/" aria-label="Vibely home">
-        <img className="brand-logo" src={vibelyLogo} alt="" />
+        <img className="brand-logo" src={brandLogo} alt="" />
         <span>Vibely</span>
       </a>
       <div className="mobile-actions">
@@ -204,7 +205,7 @@ function Sidebar() {
   return (
     <aside className="sidebar" aria-label="Primary navigation">
       <a className="brand" href="/" aria-label="Vibely home">
-        <img className="brand-logo" src={vibelyLogo} alt="" />
+        <img className="brand-logo" src={brandLogo} alt="" />
         <span>Vibely</span>
       </a>
 
@@ -363,7 +364,7 @@ function LoginGate() {
     <div className="auth-gate" role="dialog" aria-modal="true" aria-label="Login required">
       <div className="auth-dialog">
         <div className="auth-brand">
-          <img className="brand-logo" src={vibelyLogo} alt="" />
+            <img className="brand-logo" src={brandLogo} alt="" />
           <span>Vibely</span>
         </div>
         <h2>Log in to continue</h2>

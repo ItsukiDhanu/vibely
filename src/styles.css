@@ -315,7 +315,7 @@ button {
 .empty-layout {
   display: grid;
   grid-template-columns: minmax(250px, 360px) minmax(0, 1fr);
-  align-items: center;
+  align-items: start;
   gap: 38px;
   min-height: calc(100vh - 248px);
 }

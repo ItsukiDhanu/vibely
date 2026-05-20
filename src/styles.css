@@ -173,6 +173,7 @@ button {
   min-height: 100vh;
   margin-left: 245px;
   padding: 22px 0 48px;
+  padding-left: 24px;
 }
 
 .feed-column {
@@ -714,6 +715,7 @@ button {
   .content {
     width: min(963px, calc(100vw - 73px));
     margin-left: 73px;
+    padding-left: 16px;
   }
 }
 

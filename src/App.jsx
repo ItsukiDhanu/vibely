@@ -21,6 +21,8 @@ import {
 } from 'lucide-react';
 
 const brandLogo = '/Vibely_logo.png';
+const LOCAL_AUTH_KEY = 'vibely_local_auth';
+const LOCAL_USER_KEY = 'vibely_local_user';
 
 const navItems = [
   { label: 'Home', icon: Home, active: true },
@@ -43,6 +45,45 @@ const githubAuthUrl = buildGithubAuthUrl({
   redirectUri: import.meta.env.VITE_GITHUB_REDIRECT_URI || getDefaultRedirectUri(),
   scope: import.meta.env.VITE_GITHUB_SCOPE,
 });
+
+function safeJsonParse(value) {
+  if (!value) {
+    return null;
+  }
+
+  try {
+    return JSON.parse(value);
+  } catch (error) {
+    return null;
+  }
+}
+
+function readLocalUser() {
+  if (typeof window === 'undefined') {
+    return null;
+  }
+
+  return safeJsonParse(window.localStorage.getItem(LOCAL_USER_KEY));
+}
+
+function readLocalAuth() {
+  if (typeof window === 'undefined') {
+    return null;
+  }
+
+  return safeJsonParse(window.localStorage.getItem(LOCAL_AUTH_KEY));
+}
+
+function writeLocalAuth({ username, password }) {
+  if (typeof window === 'undefined') {
+    return;
+  }
+
+  const user = { login: username, name: username };
+
+  window.localStorage.setItem(LOCAL_AUTH_KEY, JSON.stringify({ username, password }));
+  window.localStorage.setItem(LOCAL_USER_KEY, JSON.stringify(user));
+}
 
 function buildGithubAuthUrl({ baseUrl, clientId, redirectUri, scope }) {
   if (baseUrl) {
@@ -111,6 +152,7 @@ function App() {
   const [viewer, setViewer] = useState(null);
   const [isAuthLoading, setIsAuthLoading] = useState(true);
   const [authMode, setAuthMode] = useState('login');
+  const [authError, setAuthError] = useState('');
 
   useEffect(() => {
     let isMounted = true;
@@ -130,7 +172,8 @@ function App() {
         }
       } catch (error) {
         if (isMounted) {
-          setViewer(null);
+          const localUser = readLocalUser();
+          setViewer(localUser);
         }
       } finally {
         if (isMounted) {
@@ -148,8 +191,56 @@ function App() {
 
   const isConnected = Boolean(viewer);
 
+  const handleModeChange = (nextMode) => {
+    setAuthMode(nextMode);
+    setAuthError('');
+  };
+
+  const handleAuthSubmit = ({ mode, username, password, confirmPassword }) => {
+    const normalizedUsername = String(username || '').trim();
+
+    if (!normalizedUsername) {
+      setAuthError('Enter a username to continue.');
+      return;
+    }
+
+    if (!password) {
+      setAuthError('Enter a password to continue.');
+      return;
+    }
+
+    if (mode === 'register') {
+      if (password !== confirmPassword) {
+        setAuthError('Passwords do not match.');
+        return;
+      }
+
+      writeLocalAuth({ username: normalizedUsername, password });
+      setViewer({ login: normalizedUsername, name: normalizedUsername });
+      setAuthError('');
+      return;
+    }
+
+    const storedAuth = readLocalAuth();
+    if (!storedAuth || storedAuth.username !== normalizedUsername || storedAuth.password !== password) {
+      setAuthError('Invalid username or password.');
+      return;
+    }
+
+    setViewer({ login: normalizedUsername, name: normalizedUsername });
+    setAuthError('');
+  };
+
   if (!isConnected) {
-    return <AuthPage mode={authMode} onModeChange={setAuthMode} isAuthLoading={isAuthLoading} />;
+    return (
+      <AuthPage
+        mode={authMode}
+        onModeChange={handleModeChange}
+        isAuthLoading={isAuthLoading}
+        authError={authError}
+        onSubmit={handleAuthSubmit}
+      />
+    );
   }
 
   return (
@@ -170,7 +261,7 @@ function App() {
   );
 }
 
-function AuthPage({ mode, onModeChange, isAuthLoading }) {
+function AuthPage({ mode, onModeChange, isAuthLoading, authError, onSubmit }) {
   const isRegistering = mode === 'register';
   const title = isRegistering ? 'Create your account' : 'Log in to Vibely';
   const subtitle = isRegistering
@@ -194,6 +285,13 @@ function AuthPage({ mode, onModeChange, isAuthLoading }) {
           className="auth-form"
           onSubmit={(event) => {
             event.preventDefault();
+            const formData = new FormData(event.currentTarget);
+            onSubmit({
+              mode,
+              username: formData.get('username'),
+              password: formData.get('password'),
+              confirmPassword: formData.get('confirmPassword'),
+            });
           }}
         >
           <label className="auth-field">
@@ -232,6 +330,12 @@ function AuthPage({ mode, onModeChange, isAuthLoading }) {
             {isAuthLoading ? 'Checking session...' : submitLabel}
           </button>
         </form>
+
+        {authError && (
+          <p className="auth-error" role="alert">
+            {authError}
+          </p>
+        )}
 
         <div className="auth-divider">
           <span>or</span>

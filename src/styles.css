@@ -541,6 +541,13 @@ button {
   gap: 14px;
 }
 
+.auth-error {
+  margin: 0;
+  color: var(--danger);
+  font-size: 13px;
+  text-align: center;
+}
+
 .auth-field {
   display: grid;
   gap: 6px;

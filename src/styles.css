@@ -1,17 +1,21 @@
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap');
+
 :root {
-  --bg: #ffffff;
-  --text: #050505;
-  --muted: #737373;
-  --soft: #f7f7f7;
-  --soft-2: #efefef;
-  --border: #dbdbdb;
-  --border-strong: #c7c7c7;
-  --action: #0095f6;
-  --action-hover: #1877f2;
-  --danger: #ed4956;
+  --bg: #0b0f14;
+  --text: #f5f7fb;
+  --muted: #9aa4b2;
+  --soft: #151b24;
+  --soft-2: #1d2531;
+  --soft-hover: #2a3445;
+  --border: #263040;
+  --border-strong: #303b4c;
+  --action: #5aa9ff;
+  --action-hover: #3e92ff;
+  --danger: #ff5c6c;
+  color-scheme: dark;
   color: var(--text);
   background: var(--bg);
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-family: "Manrope", "Segoe UI", sans-serif;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -30,7 +34,11 @@ body,
 
 body {
   min-width: 320px;
-  background: var(--bg);
+  background:
+    radial-gradient(1200px 700px at 15% -10%, rgba(90, 169, 255, 0.18), transparent 55%),
+    radial-gradient(900px 600px at 100% 0%, rgba(255, 92, 108, 0.12), transparent 60%),
+    var(--bg);
+  background-attachment: fixed;
 }
 
 a {
@@ -48,7 +56,7 @@ button {
 
 .app-shell {
   min-height: 100vh;
-  background: var(--bg);
+  background: transparent;
 }
 
 .mobile-header {
@@ -239,7 +247,7 @@ button {
   place-items: center;
   border-radius: 50%;
   background: var(--soft-2);
-  color: #8e8e8e;
+  color: var(--muted);
 }
 
 .avatar-empty {
@@ -341,7 +349,7 @@ button {
   background:
     linear-gradient(135deg, rgba(0, 149, 246, 0.08), rgba(237, 73, 86, 0.08)),
     var(--soft);
-  color: #a8a8a8;
+  color: var(--muted);
 }
 
 .media-empty svg {
@@ -452,7 +460,7 @@ button {
 }
 
 .secondary-action:hover {
-  background: #e5e5e5;
+  background: var(--soft-hover);
 }
 
 .github-action {
@@ -740,7 +748,7 @@ button {
     align-items: center;
     justify-content: space-between;
     border-bottom: 1px solid var(--border);
-    background: rgba(255, 255, 255, 0.96);
+    background: rgba(11, 15, 20, 0.92);
     padding: 0 10px 0 16px;
     backdrop-filter: blur(10px);
   }

@@ -37,7 +37,7 @@ const mobileItems = navItems.filter(({ label }) =>
 );
 
 const githubAuthUrl = buildGithubAuthUrl({
-  baseUrl: import.meta.env.VITE_GITHUB_OAUTH_URL,
+  baseUrl: import.meta.env.VITE_GITHUB_OAUTH_URL || '/auth/github',
   clientId: import.meta.env.VITE_GITHUB_CLIENT_ID,
   redirectUri: import.meta.env.VITE_GITHUB_REDIRECT_URI || getDefaultRedirectUri(),
   scope: import.meta.env.VITE_GITHUB_SCOPE,
@@ -145,6 +145,25 @@ function App() {
   }, []);
 
   const isConnected = Boolean(viewer);
+  const showLoginGate = !isAuthLoading && !isConnected;
+
+  useEffect(() => {
+    if (typeof document === 'undefined') {
+      return undefined;
+    }
+
+    if (!showLoginGate) {
+      document.body.style.overflow = '';
+      return undefined;
+    }
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [showLoginGate]);
 
   return (
     <div className="app-shell">
@@ -160,6 +179,7 @@ function App() {
         </aside>
       </main>
       <MobileBar />
+      {showLoginGate && <LoginGate />}
     </div>
   );
 }
@@ -334,6 +354,23 @@ function AccountPanel({ viewer, isAuthLoading }) {
           <p>No activity yet.</p>
         </div>
       </section>
+    </div>
+  );
+}
+
+function LoginGate() {
+  return (
+    <div className="auth-gate" role="dialog" aria-modal="true" aria-label="Login required">
+      <div className="auth-dialog">
+        <div className="auth-brand">
+          <img className="brand-logo" src={vibelyLogo} alt="" />
+          <span>Vibely</span>
+        </div>
+        <h2>Log in to continue</h2>
+        <p>Connect with GitHub to unlock your personalized feed.</p>
+        <GithubAuthButton className="primary-action github-action auth-action" label="Continue with GitHub" />
+        <p className="auth-footnote">By continuing, you agree to connect your GitHub profile.</p>
+      </div>
     </div>
   );
 }

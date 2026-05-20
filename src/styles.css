@@ -79,13 +79,15 @@ button {
   font-family: "Grand Hotel", "Manrope", cursive;
   font-weight: 400;
   letter-spacing: 0.2px;
-  line-height: 1;
+  line-height: 1.1;
 }
 
 .brand span,
 .mobile-brand span,
 .auth-brand span {
   color: var(--text);
+  line-height: 1.1;
+  padding-bottom: 2px;
 }
 
 @supports (-webkit-background-clip: text) or (background-clip: text) {
